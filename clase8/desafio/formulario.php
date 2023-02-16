@@ -67,8 +67,6 @@
 
                     if ($total_filas > 0) {
                         $fila = mysqli_fetch_assoc($resultado);
-                        /* print_r($fila);
-                        die(); */
                     } else {
                         echo '<div class="alert alert-danger" role="alert">Error! No se encontró un Registro con el ID #' .$id .'</div>';
                     }
@@ -102,10 +100,8 @@
                         <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
                         <?php
                         if (isset($fila)) {
-                            $arrayFechaSinHora = explode(" ", $fila["fecha_nacimiento"]);
-                            $arrayFecha = explode("-", $arrayFechaSinHora[0]);
-                            $fila["fecha_nacimiento"] = $arrayFecha[2] ."/" .$arrayFecha[1] ."/" .$arrayFecha[0];
-                            //print_r($fila["fecha_nacimiento"]);
+                            $strtotime = strtotime($fila["fecha_nacimiento"]);
+                            $fila["fecha_nacimiento"] = date("Y-m-d", $strtotime);
                         }
                         ?>
                         <input type="date" class="form-control" name="fecha_nacimiento" value="<?php echo (isset($fila) ? $fila["fecha_nacimiento"] : ""); ?>">

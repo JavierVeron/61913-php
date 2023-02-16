@@ -11,6 +11,29 @@
         <div class="row">
             <div class="col">
                 <h1>ABM de Alumnos</h1>
+                <?php
+                include("../config.php");
+
+                if (isset($_REQUEST["accion"])) {
+                    $accion = $_REQUEST["accion"];
+
+                    if ($accion == "eliminar") {
+                        $conexion = mysqli_connect(HOST, USER, PASS, BD, PORT);
+                        $id = $_REQUEST["id"];
+    
+                        //Elimino el registro en la BD
+                        $consulta = 'DELETE FROM alumnos WHERE id = ' .$id;
+                        $resultado = mysqli_query($conexion, $consulta);
+                        $filas = mysqli_affected_rows($conexion);
+    
+                        if ($filas > 0) {
+                            echo '<div class="alert alert-success" role="alert">El registro se eliminó correctamente!</div>';
+                        } else {
+                            echo '<div class="alert alert-danger" role="alert">Error! El registro no se eliminó correctamente!</div>';
+                        }
+                    }
+                }
+                ?>                
                 <table class="table">
                     <tr>
                         <td colspan="7" class="text-end">
@@ -18,8 +41,6 @@
                         </td>
                     </tr>
                     <?php
-                    include("../config.php");
-
                     $conexion = mysqli_connect(HOST, USER, PASS, BD, PORT);
                     $consulta = 'SELECT * FROM alumnos ORDER BY nombre, apellido';
                     $resultado = mysqli_query($conexion, $consulta);
@@ -45,7 +66,7 @@
                             echo "<td class='text-center'>" .$fila["email"] ."</td>";
                             echo "<td class='text-center'>" .$fila["nro_documento"] ."</td>";
                             echo "<td class='text-center'>" .($fila["activo"] == 1 ? "<span class='badge bg-success'>SI</span>" : "<span class='badge bg-danger'>NO</span>") ."</td>";
-                            echo "<td class='text-end'><a href='formulario.php?accion=editar&id=" .$fila["id"] ."' title='Editar'><img src='images/editar.svg' alt='Editar' width='24' /></a> <a href='#' title='Eliminar'><img src='images/eliminar.svg' alt='Eliminar' width='24' /></a></td>";
+                            echo "<td class='text-end'><a href='formulario.php?accion=editar&id=" .$fila["id"] ."' title='Editar'><img src='images/editar.svg' alt='Editar' width='24' /></a> <a href='index.php?accion=eliminar&id=" .$fila["id"] ."' title='Eliminar'><img src='images/eliminar.svg' alt='Eliminar' width='24' /></a></td>";
                         }
                     } else {
                         echo "<tr>";
