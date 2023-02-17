@@ -27,7 +27,7 @@
                     $activo = $_POST["activo"];
 
                     //Inserto los datos del formulario en la BD
-                    $consulta = 'INSERT INTO alumnos (nombre, apellido, email, nro_documento, fecha_nacimiento, activo) VALUES ("' .$nombre .'", "' .$apellido .'", "' .$email .'", ' .$nro_documento .',"' .$fecha_nacimiento .'", ' .$activo .')';
+                    $consulta = 'INSERT INTO alumnos (nombre, apellido, email, nro_documento, fecha_nacimiento, activo, fecha_alta) VALUES ("' .$nombre .'", "' .$apellido .'", "' .$email .'", ' .$nro_documento .',"' .$fecha_nacimiento .'", ' .$activo .', "' .date("Y-m-d H:i:s") .'")';
                     //die($consulta);
                     $resultado = mysqli_query($conexion, $consulta);
                     $filas = mysqli_affected_rows($conexion);
@@ -48,10 +48,11 @@
                     $id = $_REQUEST["id"];
 
                     //Inserto los datos del formulario en la BD
-                    $consulta = 'UPDATE alumnos SET nombre = "' .$nombre .'", apellido = "' .$apellido .'", email = "' .$email .'", nro_documento = ' .$nro_documento .', fecha_nacimiento = "' .$fecha_nacimiento .'" , activo = ' .$activo .' WHERE id = ' .$id;
+                    $consulta = 'UPDATE alumnos SET nombre = "' .$nombre .'", apellido = "' .$apellido .'", email = "' .$email .'", nro_documento = ' .$nro_documento .', fecha_nacimiento = "' .$fecha_nacimiento .'" , activo = ' .$activo .', fecha_modificacion = "' .date("Y-m-d H:i:s") .'" WHERE id = ' .$id;
                     //die($consulta);
                     $resultado = mysqli_query($conexion, $consulta);
                     $filas = mysqli_affected_rows($conexion);
+                    mysqli_close($conexion);
 
                     if ($filas > 0) {
                         echo '<div class="alert alert-success" role="alert">El registro se actualizó correctamente!</div>';
@@ -64,6 +65,7 @@
                     $consulta = 'SELECT * FROM alumnos WHERE id = ' .$id;
                     $resultado = mysqli_query($conexion, $consulta);
                     $total_filas = mysqli_num_rows($resultado);
+                    mysqli_close($conexion);
 
                     if ($total_filas > 0) {
                         $fila = mysqli_fetch_assoc($resultado);
@@ -109,18 +111,18 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Activo</label>
                         <select class="form-control" name="activo">
-                            <?
+                            <?php
                             if (isset($fila)) {
                                 if ($fila["activo"] == 1) {
                                     echo '<option value="1" selected>Sí</option>
-                                    <option value="0">No</option>';
+                                        <option value="0">No</option>';
                                 } else {
                                     echo '<option value="1">Sí</option>
-                                    <option value="0" selected>No</option>';
+                                        <option value="0" selected>No</option>';
                                 }
                             } else {
                                 echo '<option value="1" selected>Sí</option>
-                                <option value="0">No</option>';
+                                    <option value="0">No</option>';
                             }
                             ?>                            
                         </select>
